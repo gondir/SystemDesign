@@ -63,7 +63,7 @@ export function ParkingLotView() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-foreground mb-2">Vehicle Type:</h3>
-              <RadioGroup defaultValue="car" value={preferences.vehicleType} onValueChange={(value: VehicleType) => handleVehicleTypeChange(value)} className="flex flex-wrap gap-4">
+              <RadioGroup defaultValue="car" value={preferences.vehicleType} onValueChange={(value) => handleVehicleTypeChange(value as VehicleType)} className="flex flex-wrap gap-4">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="car" id="car" />
                   <Label htmlFor="car" className="flex items-center gap-2 cursor-pointer"><Car className="h-4 w-4" /> Car</Label>
