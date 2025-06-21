@@ -4,12 +4,19 @@ import { useState, useMemo, useEffect } from 'react';
 import type { ParkingSpot, ParkingPreferences, VehicleType } from '@/lib/types';
 import { parkingSpots as initialSpots } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { ParkingLot } from '@/components/parking-lot';
 import { Separator } from '@/components/ui/separator';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Car, Bike, Truck } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Car, Bike, Truck, Snowflake, LogOut } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const vehicleTypes = [
+    { value: 'car' as const, label: 'Car', icon: <Car className="h-8 w-8 text-primary" /> },
+    { value: 'twoWheeler' as const, label: '2-Wheeler', icon: <Bike className="h-8 w-8 text-primary" /> },
+    { value: 'threeWheeler' as const, label: '3-Wheeler', icon: <span className="text-2xl font-bold h-8 w-8 flex items-center justify-center text-primary">3W</span> },
+    { value: 'heavy' as const, label: 'Heavy', icon: <Truck className="h-8 w-8 text-primary" /> },
+];
 
 export function ParkingLotView() {
   const [spots, setSpots] = useState<ParkingSpot[]>([]);
@@ -60,38 +67,55 @@ export function ParkingLotView() {
         <CardDescription>Select your vehicle type and preferences to see recommended spots. Hover over an available spot for details.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">Vehicle Type:</h3>
-              <RadioGroup defaultValue="car" value={preferences.vehicleType} onValueChange={(value) => handleVehicleTypeChange(value as VehicleType)} className="flex flex-wrap gap-4">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="car" id="car" />
-                  <Label htmlFor="car" className="flex items-center gap-2 cursor-pointer"><Car className="h-4 w-4" /> Car</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="twoWheeler" id="twoWheeler" />
-                  <Label htmlFor="twoWheeler" className="flex items-center gap-2 cursor-pointer"><Bike className="h-4 w-4" /> 2-Wheeler</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="threeWheeler" id="threeWheeler" />
-                  <Label htmlFor="threeWheeler" className="cursor-pointer">3-Wheeler</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="heavy" id="heavy" />
-                  <Label htmlFor="heavy" className="flex items-center gap-2 cursor-pointer"><Truck className="h-4 w-4" /> Heavy</Label>
-                </div>
-              </RadioGroup>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="font-semibold text-foreground mb-2">Preferences:</h3>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="covered" checked={preferences.showCovered} onCheckedChange={(checked) => handlePreferenceChange('showCovered', !!checked)} />
-                <Label htmlFor="covered">Covered Parking</Label>
+            <h3 className="font-semibold text-foreground mb-4">Vehicle Type:</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {vehicleTypes.map((vehicle) => (
+                <div
+                  key={vehicle.value}
+                  onClick={() => handleVehicleTypeChange(vehicle.value)}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer aspect-square',
+                    preferences.vehicleType === vehicle.value
+                      ? 'bg-primary/20 border-primary shadow-lg scale-105'
+                      : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
+                  )}
+                >
+                  {vehicle.icon}
+                  <span className="font-medium">{vehicle.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-4">Preferences:</h3>
+            <div className="flex flex-col gap-4">
+              <div
+                onClick={() => handlePreferenceChange('showCovered', !preferences.showCovered)}
+                className={cn(
+                  'flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all',
+                  preferences.showCovered ? 'bg-primary/20 border-primary' : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <Snowflake className="h-5 w-5 text-primary" />
+                  <Label htmlFor="covered" className="font-medium cursor-pointer">Covered Parking</Label>
+                </div>
+                <Switch id="covered" checked={preferences.showCovered} onCheckedChange={(checked) => handlePreferenceChange('showCovered', !!checked)} />
               </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="near-exit" checked={preferences.showNearExit} onCheckedChange={(checked) => handlePreferenceChange('showNearExit', !!checked)} />
-                <Label htmlFor="near-exit">Near an Exit</Label>
+              <div
+                onClick={() => handlePreferenceChange('showNearExit', !preferences.showNearExit)}
+                className={cn(
+                  'flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all',
+                  preferences.showNearExit ? 'bg-primary/20 border-primary' : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <LogOut className="h-5 w-5 text-primary" />
+                  <Label htmlFor="near-exit" className="font-medium cursor-pointer">Near an Exit</Label>
+                </div>
+                <Switch id="near-exit" checked={preferences.showNearExit} onCheckedChange={(checked) => handlePreferenceChange('showNearExit', !!checked)} />
               </div>
             </div>
           </div>
