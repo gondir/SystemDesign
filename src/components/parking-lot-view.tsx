@@ -15,7 +15,7 @@ import Image from 'next/image';
 const CarIcon = ({ className }: { className?: string }) => (
   <div className={className}>
     <Image
-      src="https://placehold.co/100x100.png"
+      src="https://images.unsplash.com/photo-1630165646015-77e71874fa68?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtZXJjZWRlcyUyMGNhcnxlbnwwfHx8fDE3NTA0ODkyODZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
       alt="Mercedes car"
       width={32}
       height={32}
