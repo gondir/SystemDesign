@@ -1,6 +1,6 @@
 'use client';
 
-import { Car, LogOut, MapPin, Snowflake } from 'lucide-react';
+import { Car, LogOut, MapPin, Snowflake, Bike, Truck, DollarSign } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { ParkingSpot } from '@/lib/types';
@@ -11,7 +11,31 @@ interface ParkingLotProps {
   recommendedSpots: Set<string>;
 }
 
+const VehicleIcon = ({ type, className }: { type: ParkingSpot['vehicleType'], className?: string }) => {
+    switch(type) {
+        case 'car':
+            return <Car className={className} />;
+        case 'twoWheeler':
+            return <Bike className={className} />;
+        case 'heavy':
+            return <Truck className={className} />;
+        case 'threeWheeler':
+            return <span className="font-bold text-xs">3W</span>;
+        default:
+            return <Car className={className} />;
+    }
+}
+
 export function ParkingLot({ spots, recommendedSpots }: ParkingLotProps) {
+
+  if (spots.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-48 text-muted-foreground">
+        <p>No parking spots available for this vehicle type.</p>
+      </div>
+    );
+  }
+
   return (
     <TooltipProvider delayDuration={100}>
       <div className="relative">
@@ -38,13 +62,17 @@ export function ParkingLot({ spots, recommendedSpots }: ParkingLotProps) {
                   )}
                   aria-label={`Parking spot ${spot.id}`}
                 >
-                  {spot.isOccupied ? <Car className="h-5 w-5 md:h-6 md:w-6 opacity-80" /> : <span className="text-xs font-bold text-accent-foreground">{spot.id.split('-')[1]}</span>}
+                  {spot.isOccupied ? <VehicleIcon type={spot.vehicleType} className="h-5 w-5 md:h-6 md:w-6 opacity-80" /> : <span className="text-xs font-bold text-accent-foreground">{spot.id.split('-')[1]}</span>}
                 </div>
               </TooltipTrigger>
               {!spot.isOccupied && (
                  <TooltipContent className="bg-background border-border shadow-lg">
                   <div className="p-1 space-y-2">
                     <p className="font-bold text-lg">Spot {spot.id}</p>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <DollarSign className="h-4 w-4 text-primary" />
+                      <span>Price: ${spot.price}</span>
+                    </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="h-4 w-4 text-primary" />
                       <span>{spot.distanceToVenue}m to venue</span>
