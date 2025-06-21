@@ -136,8 +136,18 @@ export function SpotLocator() {
   const isSubmitDisabled = isLoading || (!preview);
 
   return (
-    <Card className="w-full">
-      <CardHeader>
+    <Card className="w-full overflow-hidden">
+        <div className="relative h-48 w-full">
+            <Image
+                src="https://placehold.co/600x240.png"
+                alt="Graphic of a car being located on a map"
+                fill
+                className="object-cover"
+                data-ai-hint="location map"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent" />
+        </div>
+      <CardHeader className="pt-2">
         <CardTitle>AI Spot Locator</CardTitle>
         <CardDescription>Lost in the lot? Use your camera or upload a photo, and our AI will help you find your way.</CardDescription>
       </CardHeader>

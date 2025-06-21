@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Image from 'next/image';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -61,8 +62,18 @@ export function AnalyticsView() {
   const totalOccupied = useMemo(() => parkingSpots.filter(spot => spot.isOccupied).length, []);
 
   return (
-    <Card>
-        <CardHeader>
+    <Card className="overflow-hidden">
+        <div className="relative h-48 w-full">
+            <Image
+                src="https://placehold.co/600x240.png"
+                alt="Graphic of analytics charts and graphs"
+                fill
+                className="object-cover"
+                data-ai-hint="analytics dashboard"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent" />
+        </div>
+        <CardHeader className="pt-2">
           <CardTitle>Parking Lot Analytics</CardTitle>
           <CardDescription>Insights into parking occupancy and trends.</CardDescription>
         </CardHeader>
