@@ -61,84 +61,92 @@ export function AnalyticsView() {
   const totalOccupied = useMemo(() => parkingSpots.filter(spot => spot.isOccupied).length, []);
 
   return (
-    <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-      <Card>
+    <Card>
         <CardHeader>
-          <CardTitle>Occupancy by Vehicle Type</CardTitle>
-          <CardDescription>Live count of occupied vs. available spots for each vehicle category.</CardDescription>
+          <CardTitle>Parking Lot Analytics</CardTitle>
+          <CardDescription>Insights into parking occupancy and trends.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={barChartConfig} className="min-h-[300px] w-full">
-            <BarChart accessibilityLayer data={occupancyByVehicleType} layout="vertical" margin={{ left: 10 }}>
-              <CartesianGrid horizontal={false} />
-              <YAxis
-                dataKey="name"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                className="text-sm"
-              />
-              <XAxis dataKey="total" type="number" hide />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="occupied" stackId="a" fill="var(--color-occupied)" radius={[4, 0, 0, 4]} />
-              <Bar dataKey="available" stackId="a" fill="var(--color-available)" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ChartContainer>
+        <CardContent className="space-y-8">
+            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+            <Card>
+                <CardHeader>
+                <CardTitle>Occupancy by Vehicle Type</CardTitle>
+                <CardDescription>Live count of occupied vs. available spots for each vehicle category.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                <ChartContainer config={barChartConfig} className="min-h-[300px] w-full">
+                    <BarChart accessibilityLayer data={occupancyByVehicleType} layout="vertical" margin={{ left: 10 }}>
+                    <CartesianGrid horizontal={false} />
+                    <YAxis
+                        dataKey="name"
+                        type="category"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        className="text-sm"
+                    />
+                    <XAxis dataKey="total" type="number" hide />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar dataKey="occupied" stackId="a" fill="var(--color-occupied)" radius={[4, 0, 0, 4]} />
+                    <Bar dataKey="available" stackId="a" fill="var(--color-available)" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                </ChartContainer>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                <CardTitle>Overall Lot Occupancy</CardTitle>
+                <CardDescription>{`Currently ${totalOccupied} of ${parkingSpots.length} spots are occupied.`}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-center pb-0">
+                <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[300px]">
+                    <PieChart>
+                    <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                    <Pie
+                        data={overallOccupancyData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={60}
+                        strokeWidth={5}
+                        labelLine={false}
+                        label={({
+                            cx,
+                            cy,
+                            midAngle,
+                            innerRadius,
+                            outerRadius,
+                            value,
+                            index,
+                        }) => {
+                            const RADIAN = Math.PI / 180;
+                            const radius = 12 + innerRadius + (outerRadius - innerRadius);
+                            const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                            const y = cy + radius * Math.sin(-midAngle * RADIAN);
+        
+                            return (
+                            <text
+                                x={x}
+                                y={y}
+                                className="fill-muted-foreground text-xs"
+                                textAnchor={x > cx ? 'start' : 'end'}
+                                dominantBaseline="central"
+                            >
+                                {overallOccupancyData[index].name} ({value})
+                            </text>
+                            );
+                        }}
+                    >
+                        {overallOccupancyData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                    </Pie>
+                    </PieChart>
+                </ChartContainer>
+                </CardContent>
+            </Card>
+            </div>
         </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Overall Lot Occupancy</CardTitle>
-          <CardDescription>{`Currently ${totalOccupied} of ${parkingSpots.length} spots are occupied.`}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center pb-0">
-          <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[300px]">
-             <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-              <Pie
-                data={overallOccupancyData}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={60}
-                strokeWidth={5}
-                labelLine={false}
-                label={({
-                    cx,
-                    cy,
-                    midAngle,
-                    innerRadius,
-                    outerRadius,
-                    value,
-                    index,
-                  }) => {
-                    const RADIAN = Math.PI / 180;
-                    const radius = 12 + innerRadius + (outerRadius - innerRadius);
-                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-                    return (
-                      <text
-                        x={x}
-                        y={y}
-                        className="fill-muted-foreground text-xs"
-                        textAnchor={x > cx ? 'start' : 'end'}
-                        dominantBaseline="central"
-                      >
-                        {overallOccupancyData[index].name} ({value})
-                      </text>
-                    );
-                  }}
-              >
-                {overallOccupancyData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-    </div>
+    </Card>
   );
 }

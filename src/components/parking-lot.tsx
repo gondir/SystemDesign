@@ -1,34 +1,20 @@
 'use client';
 
-import { LogOut, MapPin, Snowflake, Bike, Truck, DollarSign } from 'lucide-react';
+import { LogOut, MapPin, Snowflake, Car, Bike, Truck, DollarSign } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { ParkingSpot } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 
 interface ParkingLotProps {
   spots: ParkingSpot[];
   recommendedSpots: Set<string>;
 }
 
-const CarImage = ({ className }: { className?: string }) => (
-  <div className={className}>
-    <Image
-      src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtZXJjZWRlcyUyMGNhcnxlbnwwfHx8fDE3NTA0ODkyODZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
-      alt="Car"
-      width={24}
-      height={24}
-      className="h-full w-full object-contain"
-      data-ai-hint="mercedes car"
-    />
-  </div>
-);
-
 const VehicleIcon = ({ type, className }: { type: ParkingSpot['vehicleType'], className?: string }) => {
     switch(type) {
         case 'car':
-            return <CarImage className={className} />;
+            return <Car className={className} />;
         case 'twoWheeler':
             return <Bike className={className} />;
         case 'heavy':
@@ -36,7 +22,7 @@ const VehicleIcon = ({ type, className }: { type: ParkingSpot['vehicleType'], cl
         case 'threeWheeler':
             return <span className="font-bold text-xs">3W</span>;
         default:
-            return <CarImage className={className} />;
+            return <Car className={className} />;
     }
 }
 
