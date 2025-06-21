@@ -1,10 +1,11 @@
 #  Park Smarter, Not Harder: Discover the Power of ParkWise
-<a href="https://studio.firebase.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgondir%2FPrakingLotProject%2Ftree%2FparkingLot">
+<a href="https://studio.firebase.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgondir%2FPrakingLotProject">
   <img
     height="32"
     alt="Open in Firebase Studio"
     src="https://cdn.firebasestudio.dev/btn/open_blue_32.svg">
 </a>
+
 
 inding a parking spot, especially in a bustling city, can feel like searching for a needle in a haystack. The frustration of circling the block, the wasted time, and the potential for missed appointments are all too familiar. But what if there was a smarter way to park?
 
