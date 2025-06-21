@@ -8,11 +8,25 @@ import { Label } from '@/components/ui/label';
 import { ParkingLot } from '@/components/parking-lot';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { Car, Bike, Truck, Snowflake, LogOut } from 'lucide-react';
+import { Bike, Truck, Snowflake, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
+
+const CarIcon = ({ className }: { className?: string }) => (
+  <div className={className}>
+    <Image
+      src="https://placehold.co/100x100.png"
+      alt="Mercedes car"
+      width={32}
+      height={32}
+      className="h-full w-full object-contain"
+      data-ai-hint="mercedes car"
+    />
+  </div>
+);
 
 const vehicleTypes: { value: VehicleType; label: string; icon: ElementType | null }[] = [
-    { value: 'car', label: 'Car', icon: Car },
+    { value: 'car', label: 'Car', icon: CarIcon },
     { value: 'twoWheeler', label: '2-Wheeler', icon: Bike },
     { value: 'threeWheeler', label: '3-Wheeler', icon: null },
     { value: 'heavy', label: 'Heavy', icon: Truck },
