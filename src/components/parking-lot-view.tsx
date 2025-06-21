@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, type ElementType } from 'react';
 import type { ParkingSpot, ParkingPreferences, VehicleType } from '@/lib/types';
 import { parkingSpots as initialSpots } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,11 +11,11 @@ import { Switch } from '@/components/ui/switch';
 import { Car, Bike, Truck, Snowflake, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const vehicleTypes = [
-    { value: 'car' as const, label: 'Car', icon: <Car className="h-8 w-8 text-primary" /> },
-    { value: 'twoWheeler' as const, label: '2-Wheeler', icon: <Bike className="h-8 w-8 text-primary" /> },
-    { value: 'threeWheeler' as const, label: '3-Wheeler', icon: <span className="text-2xl font-bold h-8 w-8 flex items-center justify-center text-primary">3W</span> },
-    { value: 'heavy' as const, label: 'Heavy', icon: <Truck className="h-8 w-8 text-primary" /> },
+const vehicleTypes: { value: VehicleType; label: string; icon: ElementType | null }[] = [
+    { value: 'car', label: 'Car', icon: Car },
+    { value: 'twoWheeler', label: '2-Wheeler', icon: Bike },
+    { value: 'threeWheeler', label: '3-Wheeler', icon: null },
+    { value: 'heavy', label: 'Heavy', icon: Truck },
 ];
 
 export function ParkingLotView() {
@@ -71,21 +71,31 @@ export function ParkingLotView() {
           <div>
             <h3 className="font-semibold text-foreground mb-4">Vehicle Type:</h3>
             <div className="grid grid-cols-2 gap-4">
-              {vehicleTypes.map((vehicle) => (
+              {vehicleTypes.map((vehicle) => {
+                const isSelected = preferences.vehicleType === vehicle.value;
+                const IconComponent = vehicle.icon;
+                return (
                 <div
                   key={vehicle.value}
                   onClick={() => handleVehicleTypeChange(vehicle.value)}
                   className={cn(
                     'flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer aspect-square',
-                    preferences.vehicleType === vehicle.value
+                    isSelected
                       ? 'bg-primary/20 border-primary shadow-lg scale-105'
                       : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
                   )}
                 >
-                  {vehicle.icon}
+                  {IconComponent ? (
+                    <IconComponent className={cn('h-8 w-8 text-primary', isSelected && 'animate-spin-slow')} />
+                  ) : (
+                    <span className={cn(
+                        "text-2xl font-bold h-8 w-8 flex items-center justify-center text-primary", 
+                        isSelected && "animate-spin-slow"
+                    )}>3W</span>
+                  )}
                   <span className="font-medium">{vehicle.label}</span>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
           <div>
